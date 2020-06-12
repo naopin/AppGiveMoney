@@ -20,11 +20,42 @@
         </td>
       </tr>
     </table>
-    <br>
-    <br>
+    <br />
+    <br />
 
-    <button @click="register">新規登録</button>
-    <br>
+    <button @click="login">ログイン</button>
+    <br />
     <router-link to="/register">新規登録はこちらから</router-link>
   </div>
 </template>
+
+<script>
+import firebase from "firebase";
+
+export default {
+  name: "Login",
+  data() {
+    return {
+      email: "",
+      password: ""
+    };
+  },
+  methods: {
+    login: function() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(() => {
+          //   const userdata = firebase.auth().currentUser;
+          //   console.log("アカウント作成", userdata);
+          this.$router.push("/");
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+      this.email = "";
+      this.password = "";
+    }
+  }
+};
+</script>
