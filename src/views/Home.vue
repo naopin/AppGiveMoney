@@ -5,9 +5,11 @@
         <td>
           <h2>{{user.displayName}}さんようこそ！</h2>
         </td>
-        <td><h2>残高:</h2></td>
         <td>
-          <button>ログアウト</button>
+          <h2>残高:</h2>
+        </td>
+        <td>
+          <button @click="logout">ログアウト</button>
         </td>
       </tr>
     </table>
@@ -29,16 +31,27 @@
 </template>
 
 <script>
+import firebase from "firebase";
+
 export default {
   name: "Home",
-  data() {
-    return {
-      userdata: ""
-    };
+  methods: {
+    logout: function() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.push("/login");
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    }
   },
   computed: {
-    user() { return this.$store.getters.user}
-  },
+    user() {
+      return this.$store.getters.user;
+    }
+  }
 };
 </script>
-
