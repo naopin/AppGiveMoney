@@ -46,9 +46,11 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(() => {
-          //   const userdata = firebase.auth().currentUser;
-          //   console.log("アカウント作成", userdata);
           this.$router.push("/");
+          const userdata = firebase.auth().currentUser;
+          this.$store.commit('login', userdata);
+          // const userdata = firebase.auth().currentUser;
+          // console.log("アカウント作成", userdata);
         })
         .catch(error => {
           alert(error.message);
