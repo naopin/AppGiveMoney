@@ -47,8 +47,12 @@ button {
 }
 </style>
 
+
 <script>
-import firebase from "firebase";
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import { firebaseApp } from "../main";
 
 export default {
   name: "Register",
@@ -61,26 +65,41 @@ export default {
   },
   methods: {
     register: function() {
-      firebase
+      firebaseApp
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(() => {
-          //  const  user = firebase.auth().currentUser;
-          //  user.updateProfile({displayName: this.displayName});
-          firebase
+          firebaseApp
             .auth()
             .currentUser.updateProfile({ displayName: this.username });
-          const userdata = firebase.auth().currentUser;
-          console.log("アカウント作成", userdata);
-          this.username = "";
-          this.email = "";
-          this.password = "";
+
+          let db = firebase.firestore();
+          db.collection("users")
+            .doc(this.email)
+            .set({
+              username: this.username,
+            });
+
+        firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(() => {
           this.$router.push("/");
+    
         })
         .catch(error => {
           alert(error.message);
         });
-    }
+
+          this.username = "";
+          this.email = "";
+          this.password = "";
+        
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    },
   }
 };
 </script>

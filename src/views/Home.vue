@@ -31,17 +31,23 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import firebase from "firebase";
-
 export default {
   name: "Home",
+  data() {
+    return {
+      userInfo: ""
+    };
+  },
   methods: {
+    ...mapActions(["setUser"]),
     logout: function() {
       firebase
         .auth()
         .signOut()
         .then(() => {
-          this.$router.push("/login");
+          // this.$router.push("/login");
         })
         .catch(error => {
           alert(error.message);
@@ -52,7 +58,20 @@ export default {
     user() {
       return this.$store.getters.user;
     }
+  },
+  created() {
+    this.$nextTick(function() {
+      const self = this;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          const userInfo = user;
+          console.log(userInfo);
+          self.setUser(userInfo);
+        } else {
+          self.$router.push("/login");
+        }
+      });
+    });
   }
 };
-
 </script>

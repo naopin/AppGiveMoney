@@ -13,7 +13,6 @@ Vue.use(VueRouter)
     name: 'Home',
     component: Home
   },
- 
   {
     path: '/register',
     name: '',

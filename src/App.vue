@@ -2,8 +2,8 @@
   <div id="app">
     <div id="nav">
       <img alt="Vue logo" src="./assets/logo.png">
-      <!-- <router-link to="/">Home</router-link> |
-      <router-link to="/register">登録</router-link> -->
+      <!-- <router-link to="/">Home</router-link> | -->
+      <!-- <router-link to="/register">登録</router-link> -->
       
     </div>
     <router-view/>
