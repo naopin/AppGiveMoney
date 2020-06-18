@@ -5,9 +5,11 @@
         <td>
           <h2>{{user.displayName}}さんようこそ！</h2>
         </td>
-        <td><h2>残高:</h2></td>
         <td>
-          <button>ログアウト</button>
+          <h2>残高:</h2>
+        </td>
+        <td>
+          <button @click="logout">ログアウト</button>
         </td>
       </tr>
     </table>
@@ -29,16 +31,47 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import firebase from "firebase";
 export default {
   name: "Home",
   data() {
     return {
-      userdata: ""
+      userInfo: ""
     };
   },
-  computed: {
-    user() { return this.$store.getters.user}
+  methods: {
+    ...mapActions(["setUser"]),
+    logout: function() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          // this.$router.push("/login");
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    }
   },
+  computed: {
+    user() {
+      return this.$store.getters.user;
+    }
+  },
+  created() {
+    this.$nextTick(function() {
+      const self = this;
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          const userInfo = user;
+          console.log(userInfo);
+          self.setUser(userInfo);
+        } else {
+          self.$router.push("/login");
+        }
+      });
+    });
+  }
 };
 </script>
-
