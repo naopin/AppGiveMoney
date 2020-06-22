@@ -83,7 +83,8 @@ export default {
                 .doc(userInfo.uid)
                 .set({
                   username: userInfo.displayName,
-                  balance: "1000"
+                  balance: "1000",
+                  uid: userInfo.uid
                 });
               this.$router.push("/");
             })
