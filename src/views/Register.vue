@@ -73,33 +73,32 @@ export default {
             .auth()
             .currentUser.updateProfile({ displayName: this.username });
 
-          let db = firebase.firestore();
-          db.collection("users")
-            .doc(this.email)
-            .set({
-              username: this.username,
+          firebase
+            .auth()
+            .signInWithEmailAndPassword(this.email, this.password)
+            .then(() => {
+              const userInfo = firebase.auth().currentUser;
+              let db = firebase.firestore();
+              db.collection("users")
+                .doc(userInfo.uid)
+                .set({
+                  username: userInfo.displayName,
+                  balance: "1000"
+                });
+              this.$router.push("/");
+            })
+            .catch(error => {
+              alert(error.message);
             });
-
-        firebase
-        .auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          this.$router.push("/");
-    
-        })
-        .catch(error => {
-          alert(error.message);
-        });
 
           this.username = "";
           this.email = "";
           this.password = "";
-        
         })
         .catch(error => {
           alert(error.message);
         });
-    },
+    }
   }
 };
 </script>
